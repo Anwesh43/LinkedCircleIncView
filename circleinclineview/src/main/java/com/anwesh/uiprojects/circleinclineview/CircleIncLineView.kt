@@ -8,8 +8,29 @@ import android.view.MotionEvent
 import android.graphics.Paint
 import android.graphics.Canvas
 import android.content.Context
+import android.graphics.Color
+import android.graphics.RectF
 
 val nodes : Int = 5
+
+fun Canvas.drawCILNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / nodes
+    val sc : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f))
+    val size : Float = gap / 4
+    paint.strokeWidth = Math.min(w, h) / 60
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.color = Color.parseColor("#4CAF50")
+    save()
+    translate(w/2, i * gap)
+    drawLine(0f, 0f, 0f, gap * scale, paint)
+    save()
+    translate(0f, gap/2)
+    drawArc(RectF(-size, -size, size, size), 90f * (1 - 2 * (i % 2)), 180f * sc, true, paint)
+    restore()
+    restore()
+}
 
 class CircleIncLineView(ctx : Context) : View(ctx) {
 
