@@ -96,4 +96,49 @@ class CircleIncLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class CILNode(var i : Int, val state : State = State()) {
+
+        var prev : CILNode? = null
+
+        var next : CILNode? = null
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : CILNode {
+            var curr : CILNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = CILNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        init {
+            addNeighbor()
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawCILNode(i, state.scale, paint)
+            prev?.draw(canvas, paint)
+        }
+    }
 }
