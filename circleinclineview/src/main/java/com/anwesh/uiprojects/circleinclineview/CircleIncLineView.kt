@@ -17,18 +17,20 @@ val nodes : Int = 5
 fun Canvas.drawCILNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
-    val gap : Float = w / nodes
-    val sc : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f))
+    val gap : Float = h / nodes
+    val sc : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f)) * 2
     val size : Float = gap / 4
     paint.strokeWidth = Math.min(w, h) / 60
     paint.strokeCap = Paint.Cap.ROUND
     paint.color = Color.parseColor("#4CAF50")
+    val index : Int = (i + 1) % 2
+    val sf = (1 - index) * sc + (1 - sc) * index
     save()
     translate(w/2, i * gap)
     drawLine(0f, 0f, 0f, gap * scale, paint)
     save()
     translate(0f, gap/2)
-    drawArc(RectF(-size, -size, size, size), 90f * (1 - 2 * (i % 2)), 180f * sc, true, paint)
+    drawArc(RectF(-size, -size, size, size), 90f * (1 - 2 * (i % 2))  + 180f * index * (sf), 180f * sc, true, paint)
     restore()
     restore()
 }
@@ -54,7 +56,7 @@ class CircleIncLineView(ctx : Context) : View(ctx) {
     data class State(var scale : Float = 0f, var prevScale : Float = 0f, var dir : Float = 0f) {
 
         fun update(cb : (Float) -> Unit) {
-            scale += 0.1f * dir
+            scale += 0.05f * dir
             if (Math.abs(scale - prevScale) > 1) {
                 scale = prevScale + dir
                 dir = 0f
