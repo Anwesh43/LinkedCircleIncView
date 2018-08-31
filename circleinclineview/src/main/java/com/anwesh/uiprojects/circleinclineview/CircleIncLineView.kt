@@ -3,6 +3,7 @@ package com.anwesh.uiprojects.circleinclineview
 /**
  * Created by anweshmishra on 31/08/18.
  */
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.graphics.Paint
@@ -183,6 +184,14 @@ class CircleIncLineView(ctx : Context) : View(ctx) {
             curr.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : CircleIncLineView {
+            val view : CircleIncLineView = CircleIncLineView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
